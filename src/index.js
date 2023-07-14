@@ -12,7 +12,7 @@ const loadMore = document.querySelector('.load-more');
 let search = '';
 let page = 1;
 const perPage = 40;
-let simpleLightBox;
+let simpleLightBox = null;
 
 form.addEventListener('submit', onSearch);
 loadMore.addEventListener('click', onLoad);
@@ -29,7 +29,7 @@ function onSearch(e) {
   
   loadMore.classList.remove('visible-button'); // Скрыть кнопку "Load more" перед новым поиском
 
-fetchPhotos(search, page, perPage)
+  fetchPhotos(search, page, perPage)
     .then(({ data }) => {
       if (data.totalHits === 0) {
         clean();
@@ -39,7 +39,11 @@ fetchPhotos(search, page, perPage)
       } else {
         clean();
         galleryMarkup(data.hits);
-        simpleLightBox = new SimpleLightbox('.gallery__link').refresh();
+        if (!simpleLightBox) {
+          simpleLightBox = new SimpleLightbox('.gallery__link');
+        } else {
+          simpleLightBox.refresh();
+        }
         Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
 
         if (data.totalHits > perPage) {
@@ -94,14 +98,14 @@ function galleryMarkup(photos) {
 
 function onLoad() {
   page += 1;
-  simpleLightBox.destroy();
 
   fetchPhotos(search, page, perPage)
     .then(({ data }) => {
       galleryMarkup(data.hits);
-      simpleLightBox = new SimpleLightbox('.gallery__link').refresh();
-
-      if (page * perPage > data.totalHits) {
+      if (simpleLightBox) {
+        simpleLightBox.refresh();
+      }
+      if (page * perPage >= data.totalHits) {
         loadMore.classList.add('visible-button');
         Notiflix.Notify.failure(
           "We're sorry, but you've reached the end of search results.");

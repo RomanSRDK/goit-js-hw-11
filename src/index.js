@@ -43,6 +43,7 @@ function onSearch(e) {
           loadMore.classList.add('visible');
         } else {
           loadMore.classList.remove('visible');
+          Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.");
         }
       }
     })
@@ -100,8 +101,7 @@ function onLoad() {
       if (page * perPage > data.totalHits) {
         loadMore.classList.add('visible');
         Notiflix.Notify.failure(
-          "We're sorry, but you've reached the end of search results."
-        );
+          "We're sorry, but you've reached the end of search results.");
       }
     })
     .catch(error => console.log(error));

@@ -97,3 +97,7 @@ body{
     .visible {
         display: block;
     }
+
+    .visible-button {
+        display: none;
+    }

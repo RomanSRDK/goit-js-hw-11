@@ -26,7 +26,10 @@ function onSearch(e) {
     Notiflix.Notify.failure('Field is empty. Please try again.');
     return;
   }
-  fetchPhotos(search, page, perPage)
+  
+  loadMore.classList.remove('visible-button'); // Скрыть кнопку "Load more" перед новым поиском
+
+fetchPhotos(search, page, perPage)
     .then(({ data }) => {
       if (data.totalHits === 0) {
         clean();
@@ -99,7 +102,7 @@ function onLoad() {
       simpleLightBox = new SimpleLightbox('.gallery__link').refresh();
 
       if (page * perPage > data.totalHits) {
-        loadMore.classList.add('visible');
+        loadMore.classList.add('visible-button');
         Notiflix.Notify.failure(
           "We're sorry, but you've reached the end of search results.");
       }
